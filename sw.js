@@ -5,7 +5,7 @@
    ========================================================================== */
 
 // Bump this version string any time a cached file's contents change.
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v4";
 const CACHE_NAME = "selvamurugan-fast-drills-" + CACHE_VERSION;
 
 // Core "app shell" — cached up front on install so the site works offline.

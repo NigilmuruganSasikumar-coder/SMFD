@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin Login · Selvamurugan Fast Drills</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+<!-- EmailJS SDK — classic global script, loaded before auth.js (an ES module) runs -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body class="admin">
+
+  <div class="login-shell">
+    <div class="login-card">
+      <div class="brand">Selvamurugan <span>Fast Drills</span></div>
+      <p class="login-sub">Admin access · one-time code, no password</p>
+
+      <div id="loginError" class="login-error" hidden></div>
+      <div id="loginSuccess" class="login-success" hidden></div>
+
+      <form id="emailStep">
+        <label class="field-label" for="emailInput">Admin email</label>
+        <input
+          id="emailInput"
+          class="field-input"
+          type="email"
+          value="selvamuruganfastdrill@gmail.com"
+          readonly
+        />
+        <button id="sendCodeBtn" type="submit" class="btn-primary">Send Login Code</button>
+      </form>
+
+      <form id="codeStep" hidden>
+        <label class="field-label" for="codeInput">6-digit code</label>
+        <input
+          id="codeInput"
+          class="field-input otp-input"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          maxlength="6"
+          autocomplete="one-time-code"
+        />
+        <button id="verifyBtn" type="submit" class="btn-primary">Verify &amp; Launch Dashboard</button>
+        <button id="resendBtn" type="button" class="btn-link">Resend code</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { sendOtp, verifyOtp, ADMIN_EMAIL } from "./js/auth.js";
+
+    const emailStep = document.getElementById("emailStep");
+    const codeStep = document.getElementById("codeStep");
+    const codeInput = document.getElementById("codeInput");
+    const sendCodeBtn = document.getElementById("sendCodeBtn");
+    const verifyBtn = document.getElementById("verifyBtn");
+    const resendBtn = document.getElementById("resendBtn");
+    const errorBox = document.getElementById("loginError");
+    const successBox = document.getElementById("loginSuccess");
+
+    const ERROR_MESSAGES = {
+      "unauthorized-email": "This dashboard is restricted to the registered admin email.",
+      "emailjs-not-loaded": "Email service failed to load. Refresh and try again.",
+      "wrong-code": "That code doesn't match. Check the email and try again.",
+      "expired-code": "That code has expired. Send a new one.",
+      "no-active-code": "No active code found. Send a new one first.",
+      default: "Something went wrong. Please try again."
+    };
+
+    function showError(err) {
+      const key = err?.message in ERROR_MESSAGES ? err.message : "default";
+      errorBox.textContent = ERROR_MESSAGES[key];
+      errorBox.hidden = false;
+      successBox.hidden = true;
+    }
+
+    function clearMessages() {
+      errorBox.hidden = true;
+      successBox.hidden = true;
+    }
+
+    function setBusy(button, busy, busyLabel, idleLabel) {
+      button.disabled = busy;
+      button.textContent = busy ? busyLabel : idleLabel;
+    }
+
+    async function requestCode() {
+      clearMessages();
+      setBusy(sendCodeBtn, true, "Sending…", "Send Login Code");
+      try {
+        await sendOtp(ADMIN_EMAIL);
+        successBox.textContent = "Code sent — check the inbox. It's valid for 15 minutes.";
+        successBox.hidden = false;
+        emailStep.hidden = true;
+        codeStep.hidden = false;
+        codeInput.focus();
+      } catch (err) {
+        console.error(err);
+        showError(err);
+      } finally {
+        setBusy(sendCodeBtn, false, "Sending…", "Send Login Code");
+      }
+    }
+
+    emailStep.addEventListener("submit", (e) => {
+      e.preventDefault();
+      requestCode();
+    });
+
+    resendBtn.addEventListener("click", async () => {
+      clearMessages();
+      setBusy(resendBtn, true, "Resending…", "Resend code");
+      try {
+        await sendOtp(ADMIN_EMAIL);
+        successBox.textContent = "New code sent.";
+        successBox.hidden = false;
+      } catch (err) {
+        console.error(err);
+        showError(err);
+      } finally {
+        setBusy(resendBtn, false, "Resending…", "Resend code");
+      }
+    });
+
+    codeStep.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMessages();
+      setBusy(verifyBtn, true, "Verifying…", "Verify & Launch Dashboard");
+      try {
+        await verifyOtp(ADMIN_EMAIL, codeInput.value);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        console.error(err);
+        showError(err);
+        setBusy(verifyBtn, false, "Verifying…", "Verify & Launch Dashboard");
+      }
+    });
+  </script>
+</body>
+</html>

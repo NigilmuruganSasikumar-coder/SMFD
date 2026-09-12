@@ -4,6 +4,17 @@ function calculateAndDisplay(){
   calculateTotal(); // defined in script.js, untouched
   revealResultPanels();
   syncExtraDisplayFields();
+  trackQuoteComputed();
+}
+
+/* Fires once per calculation so the admin dashboard's "Total Quotes
+   Computed" and "Pipeline Value" stats stay accurate. No-ops safely if
+   tracking.js hasn't loaded (e.g. locally, offline). */
+function trackQuoteComputed(){
+  if (typeof window.smfdTrackQuote !== "function") return;
+  const depth = document.getElementById("depth").value || 0;
+  const total = parseCurrency(document.getElementById("grandTotal").innerText);
+  window.smfdTrackQuote(depth, total);
 }
 
 function revealResultPanels(){

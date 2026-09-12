@@ -144,7 +144,15 @@ ul{ list-style:none; margin:0; padding:0; }
 }
 html[data-theme="light"] .navbar{ background:rgba(255,255,255,.7); }
 .navbar.scrolled{ padding:10px 40px; box-shadow:var(--shadow); }
-.title{ display:flex; flex-direction:column; gap:2px; }
+.title{ display:flex; align-items:center; gap:12px; }
+.brand-logo{
+  width:46px; height:46px; border-radius:50%; flex-shrink:0;
+  object-fit:cover; background:var(--slate-2);
+  border:2px solid var(--aqua);
+  box-shadow:0 0 0 3px rgba(47,211,201,.12), 0 6px 16px -6px var(--aqua-glow);
+  transition:box-shadow .35s var(--ease), border-color .35s var(--ease);
+}
+.title-text{ display:flex; flex-direction:column; gap:2px; min-width:0; }
 .brand-title{
   font-size:clamp(.92rem,2.6vw,1.15rem); font-weight:700; letter-spacing:.02em;
   color:var(--ink);
@@ -202,6 +210,19 @@ html[data-theme="light"] .icon-moon{ opacity:0; }
   z-index:40; opacity:0; pointer-events:none; transition:opacity .35s var(--ease);
 }
 .nav-overlay.active{ opacity:1; pointer-events:auto; }
+
+/* ---------- MOBILE DRAWER (Home / About / Calculator / Install / Admin
+   / Call / WhatsApp panel) — hidden by default; switched on for the
+   ≤860px drawer in index2.css. On desktop .nav-links stays the plain
+   inline text menu above; only the icon/chevron/card chrome is hidden
+   here so the anchors themselves keep working as ordinary nav links. */
+.mnav-head,
+.mnav-cards,
+.mnav-contact-row,
+.mnav-footer-tag{ display:none; }
+.mnav-ico,
+.mnav-chev{ display:none; }
+.mnav-list{ display:contents; }
 
 /* -------------------------------- SLIDER --------------------------------- */
 .slider{ position:relative; height:78vh; min-height:480px; overflow:hidden; }

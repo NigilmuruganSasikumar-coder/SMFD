@@ -53,6 +53,24 @@
     navLinks && navLinks.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMenu));
   }
 
+  /* ---------------------------- MOBILE DRAWER EXTRAS --------------------- */
+  const mnavCloseBtn = document.getElementById("mnavClose");
+  if (mnavCloseBtn) {
+    mnavCloseBtn.addEventListener("click", closeMenu);
+  }
+
+  /* "Install Mobile App" card — reuses the same install prompt wired up
+     for the PWA install banner button (#pwaInstallBtn) in js/pwa.js.
+     Falls back to no-op (just closes the menu) if that flow isn't ready. */
+  const mnavInstallApp = document.getElementById("mnavInstallApp");
+  if (mnavInstallApp) {
+    mnavInstallApp.addEventListener("click", (e) => {
+      e.preventDefault();
+      const pwaBtn = document.getElementById("pwaInstallBtn");
+      if (pwaBtn) pwaBtn.click();
+    });
+  }
+
   /* ---------------------------- NAVBAR SHRINK ---------------------------- */
   const navbar = document.querySelector(".navbar");
   if (navbar) {

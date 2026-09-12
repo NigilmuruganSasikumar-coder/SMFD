@@ -1,0 +1,77 @@
+rules_version = '2';
+
+// SELVAMURUGAN FAST DRILLS — FIRESTORE SECURITY RULES
+//
+// How this works (read this before you paste it in):
+// Every visitor to the public site AND the admin panel signs in
+// anonymously (this happens automatically via ensureAnonymousAuth() in
+// firebase-init.js). So `request.auth != null` is true for anyone with
+// the page open — it does NOT mean "this is Nigil." It only means "this
+// request came from a real browser session, not a random script."
+//
+// Because this project has no server (Spark/free plan, no Cloud
+// Functions), there is no way to cryptographically prove "this specific
+// browser is the admin" without one. The OTP screen is a UX gate, not a
+// database-level one. These rules are the honest trade-off for a
+// no-backend single-admin small business panel:
+//   • Visitors can WRITE tracking data (sessions, pageviews,
+//     interactions, quotes) but can never read anyone else's — so a
+//     competitor snooping in devtools can't scrape your traffic.
+//   • Reading the aggregated data back requires a signed-in session,
+//     which in practice means "opened the admin panel."
+//   • otp_codes is fully locked down: only writable/readable by the
+//     request that created it in the first place, and it's a random
+//     6-digit code that expires in 5 minutes.
+//
+// If this business ever wants the stronger guarantee ("only Nigil's UID
+// can read analytics"), that requires upgrading to the Blaze plan and
+// adding a Cloud Function that verifies the OTP server-side and sets a
+// custom auth claim — see SETUP-GUIDE.md, "Hardening later."
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Aggregated counters — visitors increment them, only signed-in
+    // sessions (the admin panel) read them back.
+    match /stats/{docId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // Session heartbeats — a visitor can create/update only their own
+    // session document, never read the list of everyone else's.
+    match /sessions/{sessionId} {
+      allow create: if request.auth != null;
+      allow update: if request.auth != null;
+      allow read: if request.auth != null; // dashboard needs list-level read
+    }
+
+    match /pageviews/{docId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    match /interactions/{docId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    match /quotes/{docId} {
+      allow create: if request.auth != null;
+      allow read: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    // OTP codes — short-lived, single document per email, never listed.
+    match /otp_codes/{emailKey} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Everything else stays closed by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -77,16 +77,63 @@
 
 <header class="navbar">
     <div class="title">
-        <h1 class="brand-title">SELVAMURUGAN FAST DRILLS</h1>
-        <span>Groundwater Drilling Experts</span>
+        <img class="brand-logo" src="img/icon-192.png" alt="Selvamurugan Fast Drills logo">
+        <div class="title-text">
+            <h1 class="brand-title">SELVAMURUGAN FAST DRILLS</h1>
+            <span>Groundwater Drilling Experts</span>
+        </div>
     </div>
     <nav class="nav-links" id="navLinks">
-        <a href="#home">🏠Home</a>
-        <a href="#about">ℹ️About</a>
-        <a href="#services1">🛠️Services</a>
-        <a href="#galary">🖼️Gallery</a>
-        <a href="#contact">📞Contact</a>
-        <a href="#testimonials">🤝 Customer Hub</a>
+
+        <!-- ===== Drawer header (mobile only) — logo + brand + close ===== -->
+        <div class="mnav-head">
+            <div class="mnav-brand">
+                <img class="mnav-logo" src="img/icon-192.png" alt="Selvamurugan Fast Drills logo">
+                <div class="mnav-brand-text">
+                    <strong>SELVAMURUGAN</strong>
+                    <strong class="mnav-accent">FAST DRILLS</strong>
+                    <span>Advanced Borewell Drilling</span>
+                </div>
+            </div>
+            <button type="button" class="mnav-close" id="mnavClose" aria-label="Close menu"><i class="fas fa-xmark"></i></button>
+        </div>
+
+        <!-- ===== Primary links — plain row on desktop, icon rows on mobile ===== -->
+        <div class="mnav-list">
+            <a href="#home" class="mnav-item"><span class="mnav-ico"><i class="fas fa-house"></i></span><span class="mnav-label">Home</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+            <a href="#about" class="mnav-item"><span class="mnav-ico"><i class="fas fa-user-group"></i></span><span class="mnav-label">About Us</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+            <a href="#services1" class="mnav-item"><span class="mnav-ico"><i class="fas fa-gear"></i></span><span class="mnav-label">Services</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+            <a href="#galary" class="mnav-item"><span class="mnav-ico"><i class="fas fa-images"></i></span><span class="mnav-label">Gallery</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+            <a href="#faq" class="mnav-item"><span class="mnav-ico"><i class="fas fa-circle-question"></i></span><span class="mnav-label">FAQ</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+            <a href="#contact" class="mnav-item"><span class="mnav-ico"><i class="fas fa-envelope"></i></span><span class="mnav-label">Contact</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+        </div>
+
+        <!-- ===== Action cards (mobile only) ===== -->
+        <div class="mnav-cards">
+            <a href="#calculator-section" class="mnav-card mnav-card--calc">
+                <span class="mnav-card-ico"><i class="fas fa-calculator"></i></span>
+                <span class="mnav-card-text"><strong>Calculator</strong><small>Estimate Your Borewell Cost</small></span>
+                <i class="fas fa-chevron-right mnav-chev"></i>
+            </a>
+            <a href="#" class="mnav-card mnav-card--install" id="mnavInstallApp">
+                <span class="mnav-card-ico"><i class="fas fa-mobile-screen-button"></i></span>
+                <span class="mnav-card-text"><strong>Install Mobile App</strong><small>Get Our App for Easy Access</small></span>
+                <i class="fas fa-chevron-right mnav-chev"></i>
+            </a>
+            <a href="#" class="mnav-card mnav-card--admin" id="mnavAdminLogin">
+                <span class="mnav-card-ico"><i class="fas fa-shield-halved"></i></span>
+                <span class="mnav-card-text"><strong>Admin Login</strong><small>Access Your Dashboard</small></span>
+                <i class="fas fa-chevron-right mnav-chev"></i>
+            </a>
+        </div>
+
+        <!-- ===== Quick contact row (mobile only) ===== -->
+        <div class="mnav-contact-row">
+            <a href="tel:+919788799883" class="mnav-contact-btn mnav-contact-btn--call"><i class="fas fa-phone"></i><span><strong>Call Now</strong><small>Quick Support</small></span></a>
+            <a href="https://wa.me/919488161788" target="_blank" class="mnav-contact-btn mnav-contact-btn--whatsapp"><i class="fab fa-whatsapp"></i><span><strong>WhatsApp</strong><small>Chat With Us</small></span></a>
+        </div>
+
+        <p class="mnav-footer-tag">Water Builds A Better Tomorrow</p>
     </nav>
     <button class="calc-btn-nav" onclick="location.href='#calculator-section'"><i class="fas fa-calculator"></i> <span>DrillCalc</span></button>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
@@ -116,7 +163,7 @@
 
 <div class="spacer"></div>
 
-<section class="hero" id="home">
+<section class="hero" id="home" data-track-section="Landing">
     <div class="hero-container">
         <div class="hero-badge">★ Trusted Borewell Company Since 1995</div>
         <h1 class="txtcolor">⚡ Fast Borewell Drilling Services</h1>
@@ -200,7 +247,7 @@
     <span></span>
 </div>
     
-<section class="sarea" id="service-areas">
+<section class="sarea" id="service-areas" data-track-section="Service Areas">
 
   <div class="sarea-top">
     <!-- LEFT: heading + stats -->
@@ -440,7 +487,7 @@
     <div class="drop">◆</div>
     <span></span>
 </div>
-<div id="calculator-section">
+<div id="calculator-section" data-track-section="Calculator">
     <div class="page">
 
   <!-- Hidden compatibility elements: script.js (untouched) references these -->
@@ -746,7 +793,7 @@
     <div class="drop">◆</div>
     <span></span>
 </div>
-<section class="testimonials" id="testimonials">
+<section class="testimonials" id="testimonials" data-track-section="Testimonials" data-track-reviews>
     <div class="section-title"><h1 class="txtcolor">Customer Reviews</h1><p>What our customers say about our services</p></div>
     <div class="testimonial-container">
         <div class="testimonial-card"><div class="stars">⭐⭐⭐⭐⭐</div><p>"Excellent drilling service with professional equipment and skilled operators. The work was completed smoothly and the team maintained good communication throughout the process."</p><h4>R. Manikandan</h4><span>Agricultural Land Owner • Salem</span></div>
@@ -772,7 +819,7 @@
     <div class="drop">◆</div>
     <span></span>
 </div>
-<section class="faq" id="faq">
+<section class="faq" id="faq" data-track-section="FAQ">
     <div class="section-title"><h1 class="txtcolor">Customers Frequently Ask Questions</h1><p>Helpful information before starting your drilling project</p></div>
     <div class="faq-container">
         <details><summary>How is drilling cost calculated?</summary><p>The drilling cost may depend on drilling depth, soil condition, rock formation, casing requirements, and location.</p></details>
@@ -930,5 +977,9 @@
 <script src="js/script.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/pwa.js"></script>
+
+<script type="module" src="tracking.js"></script>
+
+<div><a href="login.html">Login</a></div>
 </body>
 </html>

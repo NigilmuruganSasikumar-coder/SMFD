@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard · Selvamurugan Fast Drills</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin">
+
+  <header class="admin-topbar">
+    <div class="brand">Selvamurugan <span>Fast Drills</span></div>
+    <div class="meta">
+      <span>Auto-sync <strong>30s</strong></span>
+      <span>Latency <strong id="syncLatency">—</strong></span>
+      <span>Last sync <strong id="syncTimestamp">—</strong></span>
+      <span class="badge-superadmin">SuperAdmin</span>
+    </div>
+    <button id="logoutBtn" class="btn-logout">Log out</button>
+  </header>
+
+  <main class="admin-shell">
+    <div id="dashboardError" class="error-banner" hidden></div>
+
+    <section class="readout-panel" aria-label="Key stats">
+      <div class="readout">
+        <div class="readout-label">Total Logged Sessions</div>
+        <div class="readout-value" id="statTotalSessions">—</div>
+      </div>
+      <div class="readout">
+        <div class="readout-label">Active Sessions</div>
+        <div class="readout-value is-live" id="statActiveSessions">—</div>
+      </div>
+      <div class="readout">
+        <div class="readout-label">Total Quotes Computed</div>
+        <div class="readout-value" id="statTotalQuotes">—</div>
+      </div>
+      <div class="readout">
+        <div class="readout-label">Pipeline Value</div>
+        <div class="readout-value" id="statPipelineValue">—</div>
+      </div>
+      <div class="readout">
+        <div class="readout-label">All-Time Views</div>
+        <div class="readout-value" id="statAllTimeViews">—</div>
+      </div>
+    </section>
+
+    <div class="admin-grid">
+      <section class="panel">
+        <div class="panel-title">Traffic — Last 7 Days</div>
+        <svg id="trafficChartSvg" width="100%" height="200" role="img" aria-label="Daily page views, last 7 days">
+          <defs>
+            <linearGradient id="trafficGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f5c400" stop-opacity="0.6" />
+              <stop offset="100%" stop-color="#f5c400" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Mobile vs. Desktop</div>
+        <div class="split-row">
+          <div class="split-label" id="deviceSplitMobileLabel">Mobile — 0% (0)</div>
+          <div class="split-track"><div class="split-fill" id="deviceSplitMobileBar" style="width:0%"></div></div>
+          <div class="split-label" id="deviceSplitDesktopLabel">Desktop — 0% (0)</div>
+          <div class="split-track"><div class="split-fill desktop" id="deviceSplitDesktopBar" style="width:0%"></div></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">Customer Conversion Funnel</div>
+        <div id="funnelContainer"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title"><span class="live-dot"></span>Live Visitor Intelligence</div>
+        <div class="live-grid">
+          <div>
+            <div class="live-stat-label">Active Now</div>
+            <div class="live-stat-value" id="liveActiveCount">—</div>
+          </div>
+          <div>
+            <div class="live-stat-label">Primary Device</div>
+            <div class="live-stat-value" id="livePrimaryDevice">—</div>
+          </div>
+          <div>
+            <div class="live-stat-label">Active Section</div>
+            <div class="live-stat-value" id="liveActiveSection">—</div>
+          </div>
+        </div>
+        <button id="openAnalyticsModalBtn" class="btn-open-modal">Open Live Visitor Analytics</button>
+      </section>
+    </div>
+  </main>
+
+  <!-- Live Visitor Analytics modal — §11 -->
+  <div id="analyticsModal" class="modal-backdrop" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="analyticsModalTitle">
+      <div class="modal-header">
+        <h2 id="analyticsModalTitle">Live Visitor Analytics</h2>
+        <button id="analyticsModalCloseBtn" class="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="geography">Geography</button>
+        <button class="modal-tab" data-tab="devices">Devices &amp; OS</button>
+        <button class="modal-tab" data-tab="engagement">Engagement</button>
+        <button class="modal-tab" data-tab="stream">Live Stream</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-panel" data-panel="geography">
+          <div class="modal-subtitle">Top Districts</div>
+          <ul class="geo-list" id="geoDistrictList"></ul>
+          <div class="modal-subtitle">States</div>
+          <div class="chip-row" id="geoStateChips"></div>
+          <div class="modal-subtitle">Countries</div>
+          <div class="chip-row" id="geoCountryChips"></div>
+        </div>
+
+        <div class="modal-panel" data-panel="devices" hidden>
+          <div class="modal-subtitle">Mobile vs. Desktop</div>
+          <div id="modalDeviceSplitBar"></div>
+          <div class="modal-subtitle">Operating System</div>
+          <ul class="geo-list" id="modalOsBreakdown"></ul>
+          <div class="modal-subtitle">Browser</div>
+          <ul class="geo-list" id="modalBrowserBreakdown"></ul>
+        </div>
+
+        <div class="modal-panel" data-panel="engagement" hidden>
+          <div class="engagement-summary">
+            <div>
+              <div class="live-stat-label">Peak Enquiry Window</div>
+              <div class="live-stat-value" id="engagementPeakWindow">—</div>
+            </div>
+            <div>
+              <div class="live-stat-label">Avg. Session Duration</div>
+              <div class="live-stat-value" id="engagementAvgDuration">—</div>
+            </div>
+          </div>
+          <div class="modal-subtitle">Top Section Interactions</div>
+          <ul class="geo-list" id="engagementTopSections"></ul>
+        </div>
+
+        <div class="modal-panel" data-panel="stream" hidden>
+          <ul class="stream-list" id="liveStreamList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
