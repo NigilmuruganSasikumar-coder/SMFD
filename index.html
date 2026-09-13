@@ -100,12 +100,12 @@
 
         <!-- ===== Primary links — plain row on desktop, icon rows on mobile ===== -->
         <div class="mnav-list">
-            <a href="#home" class="mnav-item"><span class="mnav-ico"><i class="fas fa-house"></i></span><span class="mnav-label">Home</span><i class="fas fa-chevron-right mnav-chev"></i></a>
-            <a href="#about" class="mnav-item"><span class="mnav-ico"><i class="fas fa-user-group"></i></span><span class="mnav-label">About Us</span><i class="fas fa-chevron-right mnav-chev"></i></a>
-            <a href="#services1" class="mnav-item"><span class="mnav-ico"><i class="fas fa-gear"></i></span><span class="mnav-label">Services</span><i class="fas fa-chevron-right mnav-chev"></i></a>
-            <a href="#galary" class="mnav-item"><span class="mnav-ico"><i class="fas fa-images"></i></span><span class="mnav-label">Gallery</span><i class="fas fa-chevron-right mnav-chev"></i></a>
-            <a href="#faq" class="mnav-item"><span class="mnav-ico"><i class="fas fa-circle-question"></i></span><span class="mnav-label">FAQ</span><i class="fas fa-chevron-right mnav-chev"></i></a>
-            <a href="#contact" class="mnav-item"><span class="mnav-ico"><i class="fas fa-envelope"></i></span><span class="mnav-label">Contact</span><i class="fas fa-chevron-right mnav-chev"></i></a>
+            <a href="#home" class="mnav-item"><span class="mnav-ico"><i class="fas fa-house"></i></span><span class="mnav-label">Home</span><i class="fas fa-chevron-right mnav-chev desktop-hide"></i></a>
+            <a href="#about" class="mnav-item"><span class="mnav-ico"><i class="fas fa-user-group"></i></span><span class="mnav-label">About Us</span><i class="fas fa-chevron-right mnav-chev desktop-hide"></i></a>
+            <a href="#services1" class="mnav-item"><span class="mnav-ico"><i class="fas fa-gear"></i></span><span class="mnav-label">Services</span><i class="fas fa-chevron-right mnav-chev desktop-hide"></i></a>
+            <a href="#galary" class="mnav-item"><span class="mnav-ico"><i class="fas fa-images"></i></span><span class="mnav-label">Gallery</span><i class="fas fa-chevron-right mnav-chev desktop-hide"></i></a>
+            <a href="#faq" class="mnav-item"><span class="mnav-ico"><i class="fas fa-circle-question"></i></span><span class="mnav-label">FAQ</span><i class="fas fa-chevron-right mnav-chev desktop-hide"></i></a>
+            <a href="#contact" class="mnav-item"><span class="mnav-ico"><i class="fas fa-envelope"></i></span><span class="mnav-label">Contact</span><i class="fas fa-chevron-right mnav-chev desktop-hide"></i></a>
         </div>
 
         <!-- ===== Action cards (mobile only) ===== -->
@@ -115,30 +115,30 @@
                 <span class="mnav-card-text"><strong>Calculator</strong><small>Estimate Your Borewell Cost</small></span>
                 <i class="fas fa-chevron-right mnav-chev"></i>
             </a>
-            <a href="#" class="mnav-card mnav-card--install" id="mnavInstallApp">
+
+            <button class="mnav-card mnav-card--install" id="mnavInstallApp" type="button">
                 <span class="mnav-card-ico"><i class="fas fa-mobile-screen-button"></i></span>
                 <span class="mnav-card-text"><strong>Install Mobile App</strong><small>Get Our App for Easy Access</small></span>
                 <i class="fas fa-chevron-right mnav-chev"></i>
-            </a>
-            <a href="#" class="mnav-card mnav-card--admin" id="mnavAdminLogin">
-                <span class="mnav-card-ico"><i class="fas fa-shield-halved"></i></span>
-                <span class="mnav-card-text"><strong>Admin Login</strong><small>Access Your Dashboard</small></span>
-                <i class="fas fa-chevron-right mnav-chev"></i>
-            </a>
+            </button>
         </div>
 
-        <!-- ===== Quick contact row (mobile only) ===== -->
+        <!-- ===== Quick contact + admin row (mobile only) ===== -->
         <div class="mnav-contact-row">
-            <a href="tel:+919788799883" class="mnav-contact-btn mnav-contact-btn--call"><i class="fas fa-phone"></i><span><strong>Call Now</strong><small>Quick Support</small></span></a>
-            <a href="https://wa.me/919488161788" target="_blank" class="mnav-contact-btn mnav-contact-btn--whatsapp"><i class="fab fa-whatsapp"></i><span><strong>WhatsApp</strong><small>Chat With Us</small></span></a>
+            <a href="tel:+919788799883" class="mnav-contact-btn mnav-contact-btn--call"><i class="fas fa-phone"></i><span><strong>Call Now</strong></span></a>
+            <a href="https://wa.me/919488161788" target="_blank" class="mnav-contact-btn mnav-contact-btn--whatsapp"><i class="fab fa-whatsapp"></i><span><strong>WhatsApp</strong></span></a>
+            <a href="login.html" class="mnav-contact-btn mnav-contact-btn--admin" id="mnavAdminLogin"><i class="fas fa-shield-halved"></i><span><strong>Admin</strong></span></a>
         </div>
 
         <p class="mnav-footer-tag">Water Builds A Better Tomorrow</p>
     </nav>
     <button class="calc-btn-nav" onclick="location.href='#calculator-section'"><i class="fas fa-calculator"></i> <span>DrillCalc</span></button>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-        <span class="toggle-thumb"><i class="fas fa-sun icon-sun"></i><i class="fas fa-moon icon-moon"></i></span>
-    </button>
+    <div class="desktop-corner-box">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="toggle-thumb"><i class="fas fa-sun icon-sun"></i><i class="fas fa-moon icon-moon"></i></span>
+        </button>
+        <a href="login.html" class="admin-btn-nav" aria-label="Admin Login"><i class="fas fa-shield-halved"></i> <span>Admin</span></a>
+    </div>
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
         <span class="bar"></span><span class="bar"></span><span class="bar"></span>
     </button>
@@ -921,14 +921,8 @@
      ============================================= -->
 <nav class="pwa-bottom-nav" aria-label="Quick navigation">
   <ul class="pwa-nav-items">
-    <li class="pwa-nav-item">
-      <a href="#home" class="pwa-nav-link active" data-pwa-nav="home" aria-label="Home">
-        <i class="fas fa-home" aria-hidden="true"></i>
-        <span>Home</span>
-      </a>
-    </li>
     <li class="pwa-nav-item pwa-nav-item--calc">
-      <a href="#calculator-section" class="pwa-nav-link" data-pwa-nav="calc" aria-label="Borewell Calculator">
+      <a href="#calculator-section" class="pwa-nav-link active" data-pwa-nav="calc" aria-label="Borewell Calculator">
         <i class="fas fa-calculator" aria-hidden="true"></i>
         <span>Calculator</span>
       </a>
@@ -938,6 +932,12 @@
         <i class="fas fa-phone-alt" aria-hidden="true"></i>
         <span>Call</span>
       </a>
+    </li>
+    <li class="pwa-nav-item pwa-nav-item--install">
+      <button class="pwa-nav-link pwa-nav-install-btn" id="pwaBottomInstallBtn" aria-label="Install App">
+        <i class="fas fa-home" aria-hidden="true"></i>
+        <span>Install</span>
+      </button>
     </li>
     <li class="pwa-nav-item pwa-nav-item--whatsapp">
       <a href="https://wa.me/919788799883" class="pwa-nav-link" target="_blank" rel="noopener" aria-label="WhatsApp us">
@@ -980,6 +980,5 @@
 
 <script type="module" src="tracking.js"></script>
 
-<div><a href="login.html">Login</a></div>
 </body>
 </html>

@@ -1,0 +1,1898 @@
+/* ==========================================================================
+   SELVAMURUGAN FAST DRILLS — RESPONSIVE STYLES
+   PHASE 1: Home banner (Navbar, brand, hamburger + slide-out mobile menu,
+            theme toggle, calculator nav button, Hero section incl. stat
+            counters and depth-gauge decoration.)
+   PHASE 2: About section (#about1) — single column ("one container per
+            row") on mobile.
+   PHASE 3: Our Services section (#ourservices) — now single column
+            (one container per row) on mobile, same as About.
+   PHASE 4: Service Areas "WE SERVE HERE" quick grid — all 6 cards in
+            a single row (like desktop), shrunk down, number badge
+            hidden.
+   PHASE 5: Service Areas bottom CTA bar ("Outside These Areas?") —
+            single row (like desktop), compacted: description and
+            CTA subtext hidden, stats row (Locations/Support/
+            Guarantee) hidden.
+   PHASE 6: Service Areas intro + orbit map — stacked full-width
+            (fixes the squeezed side-by-side layout you saw).
+   PHASE 7: Gallery / Project Portfolio (.gaimg) — single column
+            (one photo per row) on mobile.
+   PHASE 8: Calculator (#calculator-section) — mode panel + project
+            details stack, mode cards and field pairs stay side-by-
+            side, stats row stays 4-across, Save Estimate / Important
+            Notes now stack one per row. Includes a min-width:0 fix
+            for the stat cards overflowing past the right edge on
+            narrower phones.
+   PHASE 9: Google Review bar (.review-bar) — forced onto a single
+            line (icon, stars, 4.9/5, Read Reviews button); the
+            "Google Reviews" caption is hidden to make room.
+   PHASE 10: Contact — 4 info buttons (.contcolor) — all 4 stay in
+             a single row, boxes/text shrunk to fit (no carousel).
+   PHASE 11: Contact — map + form (.coat2) — one container per row
+             (map on top, form below).
+   PHASE 12: Footer (.baccor3) — 4 columns → 2 columns (≤980px) →
+             single column, one block per row (≤640px).
+   PHASE 13: Bottom nav bar (.pwa-bottom-nav) — shown on mobile
+             (≤860px) only, explicitly hidden on desktop/tablet
+             (≥861px). The top .navbar is already position:sticky
+             in the base/full CSS, so it's visible in every view
+             without any extra rule here.
+   BUGFIX:   The navbar's position:sticky silently breaks on mobile
+             because html/body have overflow-x:hidden (an ancestor
+             overflow other than visible disables sticky on its
+             descendants). Switched .navbar to position:fixed on
+             mobile instead, with matching body padding-top so it
+             stays pinned through the whole page, not just Home.
+   BUGFIX:   Brand name was truncating with "..." at 375px, and the
+             tagline was hidden entirely below 420px. Both now stay
+             fully visible at every width — the icons/toggle/
+             hamburger shrink instead, with an extra ≤360px step
+             for the narrowest phones.
+   BUGFIX:   Calculator mode cards and field pairs were overflowing
+             past the right edge on ~400-430px phones (same
+             content-based min-width issue as the stat cards).
+             min-width:0 added, plus a dedicated ≤430px step that
+             tightens mode-card/field sizing further.
+   HIDDEN:   Floating WhatsApp/Instagram buttons hidden on mobile
+             (≤860px) — redundant with the bottom nav's own
+             WhatsApp/Contact tabs, and were overlapping content.
+   BUGFIX:   GST toggle + Clear All + Calculate Estimate were
+             stacking onto separate lines on small/medium phones
+             instead of staying in one row like the large view.
+             Forced back to a single row (!important), with
+             smaller toggle/button sizing so everything fits;
+             button icons drop entirely below 380px for room.
+   ========================================================================== */
+
+/* =========================================================
+   MOBILE NAVIGATION  (≤ 860px)
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    /* ---------- PAGE WIDTH ---------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        position: relative;
+    }
+
+
+    /* ---------- NAVBAR ---------- */
+
+    .navbar {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+
+        padding: 12px 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 10px;
+        flex-wrap: nowrap;
+
+        box-sizing: border-box;
+
+        position: sticky;
+        top: 0;
+
+        z-index: 10000;
+    }
+
+
+    /* ---------- BRAND ---------- */
+
+    .title {
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+        gap: 8px;
+    }
+
+    .brand-logo {
+        width: 34px;
+        height: 34px;
+        border-width: 1.5px;
+    }
+
+    .title-text {
+        min-width: 0;
+    }
+
+    .brand-title {
+        display: block;
+
+        font-size: .8rem;
+        line-height: 1.2;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .title span {
+        display: block;
+
+        font-size: .5rem;
+        letter-spacing: .04em;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* =====================================================
+       MOBILE MENU PANEL
+       ===================================================== */
+
+    .nav-links {
+
+        /* IMPORTANT */
+        position: fixed !important;
+
+        top: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+
+        width: min(86vw, 360px) !important;
+        height: 100dvh !important;
+
+        box-sizing: border-box;
+
+        margin: 0;
+        padding: 22px 18px 26px;
+
+        /* ---------- GLASSY WATER PANEL ---------- */
+        background:
+            radial-gradient(520px 260px at 100% 0%, rgba(47, 211, 201, .16), transparent 60%),
+            radial-gradient(420px 240px at 0% 100%, rgba(193, 87, 30, .10), transparent 55%),
+            linear-gradient(180deg, rgba(16, 27, 34, .88), rgba(8, 13, 18, .95));
+        backdrop-filter: blur(22px) saturate(160%);
+        -webkit-backdrop-filter: blur(22px) saturate(160%);
+
+        display: flex !important;
+        flex-direction: column !important;
+
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+
+        gap: 14px !important;
+
+        border-left: 1px solid rgba(47, 211, 201, .28);
+        box-shadow: -24px 0 60px -20px rgba(0, 0, 0, .65), inset 1px 0 0 rgba(255, 255, 255, .05);
+
+        /* CLOSED */
+        transform: translateX(100%);
+
+        /* IMPORTANT */
+        transition: transform .4s var(--ease);
+
+        /* Above overlay */
+        z-index: 10001 !important;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    html[data-theme="light"] .nav-links {
+        background:
+            radial-gradient(520px 260px at 100% 0%, rgba(11, 156, 143, .14), transparent 60%),
+            radial-gradient(420px 240px at 0% 100%, rgba(180, 78, 20, .08), transparent 55%),
+            linear-gradient(180deg, rgba(255, 253, 248, .90), rgba(243, 240, 231, .95));
+        border-left: 1px solid rgba(11, 156, 143, .28);
+        box-shadow: -24px 0 60px -20px rgba(23, 33, 31, .25), inset 1px 0 0 rgba(255, 255, 255, .6);
+    }
+
+
+    /* ---------- OPEN MENU ---------- */
+
+    .nav-links.active {
+        right: 0 !important;
+
+        transform: translateX(0) !important;
+    }
+
+
+    /* =====================================================
+       DRAWER HEADER — logo + brand + close
+       ===================================================== */
+
+    .mnav-head {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        padding-bottom: 14px;
+        margin-bottom: 2px;
+        border-bottom: 1px solid var(--line);
+        flex-shrink: 0;
+    }
+
+    .mnav-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .mnav-logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        border: 2px solid var(--aqua);
+        box-shadow: 0 0 0 3px rgba(47, 211, 201, .14), 0 6px 16px -6px var(--aqua-glow);
+    }
+
+    .mnav-brand-text {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        line-height: 1.15;
+    }
+
+    .mnav-brand-text strong {
+        font-family: var(--font-display);
+        font-size: .92rem;
+        letter-spacing: .01em;
+        color: var(--ink);
+        white-space: nowrap;
+    }
+
+    .mnav-brand-text strong.mnav-accent {
+        color: var(--aqua);
+    }
+
+    .mnav-brand-text span {
+        margin-top: 3px;
+        font-family: var(--font-mono);
+        font-size: .52rem;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--ink-dim);
+        white-space: nowrap;
+    }
+
+    .mnav-close {
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, .06);
+        border: 1px solid var(--line);
+        color: var(--ink);
+        font-size: .9rem;
+        cursor: pointer;
+        transition: background .3s var(--ease), transform .3s var(--ease);
+    }
+
+    .mnav-close:hover {
+        background: rgba(224, 50, 50, .18);
+        color: #ff8a8a;
+        transform: rotate(90deg);
+    }
+
+
+    /* =====================================================
+       PRIMARY LINK LIST — glassy icon rows
+       ===================================================== */
+
+    .mnav-list {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .nav-links .mnav-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 14px;
+        text-align: left;
+        font-size: .95rem;
+        font-weight: 600;
+        color: var(--ink);
+        background: rgba(255, 255, 255, .04);
+        border: 1px solid rgba(255, 255, 255, .08);
+        backdrop-filter: blur(6px);
+        transition: background .3s var(--ease), border-color .3s var(--ease), transform .25s var(--ease);
+        z-index: 10002;
+    }
+
+    html[data-theme="light"] .nav-links .mnav-item {
+        background: rgba(23, 33, 31, .035);
+        border-color: rgba(23, 33, 31, .08);
+    }
+
+    .nav-links .mnav-item:hover,
+    .nav-links .mnav-item:active {
+        background: rgba(47, 211, 201, .12);
+        border-color: rgba(47, 211, 201, .4);
+        transform: translateX(-2px);
+    }
+
+    .nav-links .mnav-item:first-child {
+        background: linear-gradient(120deg, rgba(47, 211, 201, .28), rgba(27, 167, 157, .10));
+        border-color: rgba(47, 211, 201, .5);
+        box-shadow: 0 10px 24px -12px var(--aqua-glow);
+    }
+
+    .nav-links .mnav-ico {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        flex-shrink: 0;
+        font-size: .95rem;
+        color: var(--aqua);
+        background: rgba(47, 211, 201, .14);
+        border: 1px solid rgba(47, 211, 201, .2);
+    }
+
+    .mnav-label {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .nav-links .mnav-chev,
+    .nav-links .desktop-hide.mnav-chev {
+        display: block !important;
+        flex-shrink: 0;
+        font-size: .75rem;
+        color: var(--ink-dim);
+    }
+
+
+    /* =====================================================
+       ACTION CARDS — Calculator / Install App / Admin Login
+       ===================================================== */
+
+    .mnav-cards {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .mnav-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform .25s var(--ease);
+        z-index: 10002;
+    }
+
+    .mnav-card:active {
+        transform: scale(.98);
+    }
+
+    .mnav-card-ico {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        flex-shrink: 0;
+        font-size: 1rem;
+        color: #fff;
+        background: rgba(255, 255, 255, .16);
+    }
+
+    .mnav-card-text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+        text-align: left;
+        line-height: 1.25;
+    }
+
+    .mnav-card-text strong {
+        font-size: .92rem;
+        color: #fff;
+    }
+
+    .mnav-card-text small {
+        font-size: .68rem;
+        color: rgba(255, 255, 255, .8);
+    }
+
+    .mnav-card .mnav-chev {
+        color: rgba(255, 255, 255, .75);
+    }
+
+    .mnav-card--calc {
+        background: linear-gradient(120deg, rgba(47, 211, 201, .55), rgba(27, 167, 157, .65));
+        border: 1px solid rgba(47, 211, 201, .5);
+        box-shadow: 0 10px 24px -12px var(--aqua-glow);
+    }
+
+    .mnav-card--install {
+        background: linear-gradient(120deg, rgba(130, 87, 255, .7), rgba(88, 33, 214, .85));
+        border: 1px solid rgba(147, 112, 255, .6);
+        box-shadow: 0 12px 28px -10px rgba(130, 87, 255, .6);
+        padding: 20px 14px; /* taller than other cards */
+        border-radius: 16px;
+    }
+
+    .mnav-card--install .mnav-card-ico {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        font-size: 1.2rem;
+        background: rgba(255,255,255,.2);
+    }
+
+    .mnav-card--install .mnav-card-text strong {
+        font-size: 1rem;
+    }
+
+    .mnav-card--install .mnav-card-text small {
+        font-size: .72rem;
+    }
+
+    .mnav-card--admin {
+        background: linear-gradient(120deg, rgba(224, 55, 55, .6), rgba(140, 18, 18, .7));
+        border: 1px solid rgba(224, 55, 55, .5);
+        box-shadow: 0 10px 24px -12px rgba(224, 55, 55, .45);
+    }
+
+    /* Admin in the contact row */
+    .mnav-contact-btn--admin {
+        color: #fff;
+    }
+    .mnav-contact-btn--admin i {
+        color: #ff6b6b;
+    }
+
+
+    /* =====================================================
+       QUICK CONTACT ROW — Call Now / WhatsApp
+       ===================================================== */
+
+    .mnav-contact-row {
+        display: flex !important;
+        gap: 10px;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .mnav-contact-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        padding: 11px 12px;
+        border-radius: 13px;
+        background: rgba(255, 255, 255, .04);
+        border: 1px solid rgba(255, 255, 255, .1);
+        backdrop-filter: blur(6px);
+        z-index: 10002;
+    }
+
+    html[data-theme="light"] .mnav-contact-btn {
+        background: rgba(23, 33, 31, .035);
+        border-color: rgba(23, 33, 31, .08);
+    }
+
+    .mnav-contact-btn i {
+        flex-shrink: 0;
+        font-size: 1.05rem;
+    }
+
+    .mnav-contact-btn--call i {
+        color: var(--aqua);
+    }
+
+    .mnav-contact-btn--whatsapp i {
+        color: #25D366;
+    }
+
+    .mnav-contact-btn span {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        line-height: 1.2;
+        text-align: left;
+    }
+
+    .mnav-contact-btn strong {
+        font-size: .82rem;
+        color: var(--ink);
+    }
+
+    .mnav-contact-btn small {
+        font-size: .62rem;
+        color: var(--ink-dim);
+    }
+
+
+    /* =====================================================
+       FOOTER TAGLINE
+       ===================================================== */
+
+    .mnav-footer-tag {
+        display: block !important;
+        margin-top: auto;
+        padding-top: 16px;
+        text-align: center;
+        font-family: var(--font-mono);
+        font-size: .6rem;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+        color: var(--aqua);
+        border-top: 1px solid var(--line);
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+
+    /* ---------- OVERLAY ---------- */
+
+    .nav-overlay {
+        position: fixed !important;
+
+        inset: 0 !important;
+
+        width: 100vw;
+        height: 100dvh;
+
+        background: rgba(6, 10, 13, .65);
+
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+
+        z-index: 9999 !important;
+
+        opacity: 0;
+
+        pointer-events: none;
+
+        transition: opacity .35s var(--ease);
+    }
+
+    .nav-overlay.active {
+        opacity: 1;
+
+        pointer-events: auto;
+    }
+
+
+    /* =====================================================
+       CALCULATOR BUTTON — hidden on mobile; the "Calculator"
+       card inside the drawer covers this action instead, and
+       hiding it here frees up room so the full company name
+       stays visible next to the logo.
+       ===================================================== */
+
+    /* Hide desktop-only corner box on mobile */
+    .desktop-corner-box {
+        display: none !important;
+    }
+
+    .calc-btn-nav {
+        display: none;
+    }
+
+
+    /* =====================================================
+       THEME BUTTON
+       ===================================================== */
+
+    .theme-toggle {
+
+        flex-shrink: 0;
+
+        width: 42px;
+        height: 24px;
+    }
+
+    .toggle-thumb {
+        width: 18px;
+        height: 18px;
+    }
+
+    html[data-theme="light"] .toggle-thumb {
+        transform: translateX(18px);
+    }
+
+
+    /* =====================================================
+       HAMBURGER / CLOSE BUTTON
+       ===================================================== */
+
+    .menu-toggle {
+
+        display: flex;
+
+        flex-shrink: 0;
+
+        position: relative;
+
+        z-index: 10003 !important;
+
+        padding: 6px;
+
+        background: transparent;
+
+        border: none;
+
+        cursor: pointer;
+
+        transition: opacity .25s var(--ease);
+    }
+
+    /* Drawer is open — its own header close button (✕) takes over,
+       so hide the navbar hamburger-turned-X to avoid two overlapping
+       close icons in the top-right corner. */
+    .menu-toggle.active {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+
+    /* ---------- HERO: stat row + depth gauge ---------- */
+
+    .depth-gauge {
+        display: none;
+    }
+
+    .stat {
+        padding: 0 18px;
+    }
+
+    .stat h3 {
+        font-size: 1.5rem;
+    }
+}
+
+
+/* =========================================================
+   HERO / SLIDER — SMALL MOBILE  (≤ 640px)
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .hero {
+        padding: 80px 6% 60px;
+    }
+
+    .slider {
+        height: 70vh;
+    }
+}
+
+
+/* =========================================================
+   NAVBAR — VERY SMALL MOBILE  (≤ 420px)
+   Company name + tagline stay fully visible (not truncated,
+   not hidden) — everything else shrinks to make room instead.
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .navbar {
+        gap: 6px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .brand-logo {
+        width: 28px;
+        height: 28px;
+    }
+
+    .brand-title {
+        font-size: .72rem;
+    }
+
+    .title span {
+        font-size: .44rem;
+        letter-spacing: .03em;
+    }
+
+    .theme-toggle {
+        width: 36px;
+        height: 21px;
+    }
+
+    .toggle-thumb {
+        width: 15px;
+        height: 15px;
+    }
+
+    html[data-theme="light"] .toggle-thumb {
+        transform: translateX(15px);
+    }
+
+    .menu-toggle {
+        padding: 4px;
+    }
+}
+
+
+/* =========================================================
+   NAVBAR — EXTRA SMALL MOBILE  (≤ 360px)
+   One more step down for the narrowest phones (iPhone SE etc.)
+   so "SELVAMURUGAN FAST DRILLS" + tagline still both fit on
+   one line without ellipsis.
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .navbar {
+        gap: 5px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .brand-logo {
+        width: 24px;
+        height: 24px;
+        border-width: 1px;
+    }
+
+    .brand-title {
+        font-size: .64rem;
+    }
+
+    .title span {
+        font-size: .4rem;
+        letter-spacing: .02em;
+    }
+
+    .theme-toggle {
+        width: 32px;
+        height: 19px;
+    }
+
+    .toggle-thumb {
+        width: 13px;
+        height: 13px;
+    }
+
+    html[data-theme="light"] .toggle-thumb {
+        transform: translateX(13px);
+    }
+}
+
+
+/* =========================================================
+   ABOUT — MOBILE  (≤ 860px)
+   One box per row instead of the desktop 3-column grid.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    #about1 {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   ABOUT — VERY SMALL MOBILE  (≤ 420px)
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    #about1 {
+        gap: 14px;
+        padding: 0 5% 60px;
+    }
+}
+
+
+/* =========================================================
+   OUR SERVICES — MOBILE  (≤ 860px)
+   Now single-column (one container per row), same treatment
+   as About.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    #ourservices {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   OUR SERVICES — VERY SMALL MOBILE  (≤ 420px)
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    #ourservices {
+        gap: 14px;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — "WE SERVE HERE" QUICK GRID  (≤ 860px)
+   Turns on the compact mobile card set (in place of the desktop
+   6-card row), then lays those 6 cards out in a single line —
+   same idea as the desktop row, just shrunk down. The number
+   badge is dropped since it doesn't fit/add value at this size.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .sarea-cards {
+        display: none;
+    }
+
+    .sarea-quick {
+        display: block;
+    }
+
+    .sarea-quick-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 6px;
+    }
+
+    .sarea-quick-item {
+        align-items: center;
+        text-align: center;
+        gap: 4px;
+        padding: 8px 4px;
+    }
+
+    .sarea-quick-item .sarea-num {
+        display: none;
+    }
+
+    .sarea-quick-item i.sarea-icon {
+        font-size: 1.1rem;
+    }
+
+    .sarea-quick-item strong {
+        font-size: .5rem;
+        line-height: 1.15;
+        letter-spacing: 0;
+        white-space: normal;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — QUICK GRID, VERY SMALL MOBILE  (≤ 480px)
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .sarea-quick-grid {
+        gap: 4px;
+    }
+
+    .sarea-quick-item {
+        padding: 6px 2px;
+    }
+
+    .sarea-quick-item i.sarea-icon {
+        font-size: .95rem;
+    }
+
+    .sarea-quick-item strong {
+        font-size: .44rem;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — BOTTOM CTA BAR ("Outside These Areas?")  (≤ 860px)
+   Kept as a single row (like desktop), just compacted: the
+   description paragraph and the CTA's small/em subtext are
+   hidden so the icon, title, and phone number all fit on one
+   line. Locations Covered / Customer Support / Service
+   Guarantee mini-stats are hidden too — no room for them here.
+   Card colors (dark vs light) already follow the site's theme
+   variables automatically, no extra work needed there.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .sarea-cta {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        flex-direction: row !important;
+        align-items: center;
+        text-align: left;
+        padding: 14px 16px;
+        gap: 12px;
+    }
+
+    .sarea-cta-info {
+        display: flex !important;
+        flex-direction: row !important;
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .sarea-cta-info i.truck {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+        font-size: 1rem;
+    }
+
+    .sarea-cta-info h4 {
+        font-size: .82rem;
+        margin-bottom: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sarea-cta-info p {
+        display: none;
+    }
+
+    .sarea-cta-stats {
+        display: none !important;
+    }
+
+    .sarea-cta-call {
+        display: flex !important;
+        flex: 0 0 auto;
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .sarea-cta-call-icon {
+        width: 30px;
+        height: 30px;
+        font-size: .85rem;
+    }
+
+    .sarea-cta-call small,
+    .sarea-cta-call em {
+        display: none;
+    }
+
+    .sarea-cta-call strong {
+        font-size: .82rem;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — BOTTOM CTA BAR, VERY SMALL MOBILE  (≤ 420px)
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .sarea-cta {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .sarea-cta-info h4 {
+        font-size: .76rem;
+    }
+
+    .sarea-cta-call {
+        padding: 7px 10px;
+    }
+
+    .sarea-cta-call strong {
+        font-size: .74rem;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — INTRO + ORBIT MAP  (≤ 900px)
+   Stack the intro text and the map full-width, one under the
+   other (this is the missing piece that was making it render
+   as a squeezed 2-up row instead of matching the intended
+   stacked layout).
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .sarea-top {
+        grid-template-columns: 1fr;
+        gap: 34px;
+    }
+
+    .sarea-map-wrap {
+        max-width: 420px;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — INTRO + ORBIT MAP, SMALL MOBILE  (≤ 640px)
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .sarea {
+        padding: var(--section-top) 5% 44px;
+    }
+
+    .sarea-desc {
+        max-width: 100%;
+    }
+
+    .sarea-map-wrap {
+        max-width: 340px;
+        margin: 0 auto;
+    }
+
+    .sarea-map-info,
+    .sarea-map-legend {
+        padding: 5px 9px;
+        font-size: .58rem;
+    }
+
+    .sarea-node-label {
+        font-size: .58rem;
+    }
+}
+
+
+/* =========================================================
+   SERVICE AREAS — ORBIT MAP, VERY SMALL MOBILE  (≤ 480px)
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .sarea-map-wrap {
+        max-width: 280px;
+    }
+}
+
+
+/* =========================================================
+   GALLERY / PROJECT PORTFOLIO — MOBILE  (≤ 860px)
+   Single column (one photo per row) instead of the desktop
+   3-column grid.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .gaimg {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================================
+   GALLERY / PROJECT PORTFOLIO — SMALL MOBILE  (≤ 640px)
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .gaimg img {
+        height: 200px;
+    }
+}
+
+
+/* =========================================================
+   GALLERY / PROJECT PORTFOLIO — VERY SMALL MOBILE  (≤ 420px)
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .gaimg {
+        gap: 14px;
+    }
+}
+
+
+/* =========================================================
+   CALCULATOR — MOBILE  (≤ 900px)
+   Matches the requested mobile mock: mode panel stacks above
+   project details (each keeps its own internal layout — mode
+   cards stay side-by-side, field pairs stay 2-up), header and
+   badge center up, breakdown/summary stack in one column.
+   Stat cards stay 4-across (per the mock). Save Estimate /
+   Important Notes now stack — one container per row — since
+   side-by-side left the Save card mostly empty and cut off the
+   WhatsApp Share button.
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    #calculator-section .setup-row {
+        grid-template-columns: 1fr;
+    }
+
+    #calculator-section .results-row {
+        grid-template-columns: 1fr;
+    }
+
+    #calculator-section .save-row {
+        grid-template-columns: 1fr;
+    }
+
+    #calculator-section .save-buttons {
+        flex-direction: column;
+    }
+
+    #calculator-section .site-header {
+        text-align: center;
+    }
+
+    #calculator-section .badge-years {
+        margin: 16px auto 0;
+        width: auto;
+        max-width: 320px;
+        justify-content: center;
+    }
+
+    #calculator-section .mode-cards {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    /* ---- overflow fix: mode cards + field grids can't shrink by
+       default (content-based min-width), which is what pushed
+       "Rebore Drilling" and the Phone/Rate fields off the right
+       edge on smaller phones ---- */
+    #calculator-section .mode-card,
+    #calculator-section .mode-copy,
+    #calculator-section .customer-fields,
+    #calculator-section .fields-grid,
+    #calculator-section .field,
+    #calculator-section .input-suffix {
+        min-width: 0;
+    }
+
+    #calculator-section .mode-card {
+        padding: 12px 10px;
+        gap: 8px;
+    }
+
+    #calculator-section .mode-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    #calculator-section .mode-icon svg {
+        width: 22px;
+        height: 26px;
+    }
+
+    #calculator-section .mode-name {
+        font-size: 12.5px;
+    }
+
+    #calculator-section .mode-desc {
+        font-size: 10px;
+    }
+}
+
+
+/* =========================================================
+   CALCULATOR — MOBILE, SMALLER TYPE/SPACING  (≤ 640px)
+   Same layout as above, just tightened up. Field pairs stay
+   2-up (not collapsed), stats-row stays 4-across, save-row
+   stays 2-up — only sizing changes here.
+
+   IMPORTANT: grid/flex items default to a content-based min
+   width, so a long value like "₹1,00,800" or the Notes text
+   can force its column wider than its 1fr share — that's what
+   was pushing the stat cards and the Save/Notes panel off the
+   right edge. min-width: 0 (below) lets each item actually
+   shrink to fit; the ellipsis rules stop values from wrapping
+   awkwardly once they do.
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    #calculator-section {
+        padding: var(--section-top) 4% 70px;
+        overflow-x: hidden;
+    }
+
+    #calculator-section .calculator-title h1 {
+        font-size: 30px;
+    }
+
+    #calculator-section .panel {
+        padding: 16px;
+    }
+
+    #calculator-section .breakdown-box,
+    #calculator-section .summary-box {
+        padding: 16px;
+    }
+
+    #calculator-section .customer-fields,
+    #calculator-section .fields-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    #calculator-section .field > span,
+    #calculator-section .field > label {
+        font-size: 9.5px;
+    }
+
+    #calculator-section .field input {
+        padding: 9px 10px !important;
+        font-size: 13px !important;
+    }
+
+    #calculator-section .mode-name {
+        font-size: 12px;
+    }
+
+    #calculator-section .mode-desc {
+        font-size: 9.5px;
+    }
+
+    /* ---- overflow fix: let grid/flex children shrink below content size ---- */
+    #calculator-section .stats-row,
+    #calculator-section .save-row {
+        min-width: 0;
+    }
+
+    #calculator-section .stat-card,
+    #calculator-section .stat-copy,
+    #calculator-section .save-row > .panel {
+        min-width: 0;
+    }
+
+    #calculator-section .stat-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 10px 6px;
+        gap: 6px;
+    }
+
+    #calculator-section .stat-copy {
+        align-items: center;
+        gap: 2px;
+    }
+
+    #calculator-section .stat-icon {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+    }
+
+    #calculator-section .stat-icon svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    #calculator-section .stat-value {
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #calculator-section .stat-label {
+        font-size: 7.5px;
+        letter-spacing: 0;
+        line-height: 1.25;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+
+    #calculator-section .table-head,
+    #calculator-section .table-foot,
+    #calculator-section .breakdown-row {
+        font-size: 11px;
+        padding: 8px 8px;
+    }
+}
+
+
+/* =========================================================
+   CALCULATOR — SMALL MOBILE  (≤ 430px)
+   This is the size that was actually breaking: the mode cards
+   ("New Drilling" / "Rebore Drilling") and the field pairs
+   don't have enough room left after the icon/text to stay
+   side-by-side without spilling past the edge. They stay
+   side-by-side (per the mock) — min-width:0 already added
+   above lets the text wrap onto 2 lines instead of overflowing;
+   this just tightens sizing further so it looks intentional
+   rather than cramped.
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    #calculator-section .mode-card {
+        padding: 10px 8px;
+        gap: 6px;
+    }
+
+    #calculator-section .mode-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    #calculator-section .mode-icon svg {
+        width: 18px;
+        height: 20px;
+    }
+
+    #calculator-section .mode-name {
+        font-size: 11.5px;
+    }
+
+    #calculator-section .mode-desc {
+        font-size: 9px;
+    }
+
+    #calculator-section .customer-fields,
+    #calculator-section .fields-grid {
+        gap: 8px;
+    }
+
+    #calculator-section .field > span,
+    #calculator-section .field > label {
+        font-size: 8.8px;
+        letter-spacing: .04em;
+    }
+
+    #calculator-section .field input {
+        padding: 8px 8px !important;
+        font-size: 12px !important;
+    }
+
+    #calculator-section .badge-years {
+        max-width: 260px;
+        padding: 10px;
+    }
+
+    #calculator-section .badge-years span {
+        font-size: 10.5px;
+    }
+}
+
+
+/* =========================================================
+   CALCULATOR — VERY SMALL MOBILE  (≤ 380px)
+   A little extra room-saving if the 4-across row still feels
+   tight on the narrowest phones.
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    #calculator-section .stats-row {
+        gap: 6px;
+    }
+
+    #calculator-section .stat-card {
+        padding: 8px 4px;
+        gap: 5px;
+    }
+
+    #calculator-section .stat-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    #calculator-section .stat-icon svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    #calculator-section .stat-value {
+        font-size: 12.5px;
+    }
+
+    #calculator-section .stat-label {
+        font-size: 6.6px;
+    }
+}
+
+
+/* =========================================================
+   GOOGLE REVIEW BAR  (≤ 640px)
+   Force everything onto one line instead of wrapping into a
+   two-row pill (which looked like an oversized stadium shape).
+   The "Google Reviews" caption is hidden to make room — the
+   icon, stars, and 4.9/5 already say what it is.
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .review-bar {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 10px 14px;
+    }
+
+    .review-bar .left {
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .google-icon {
+        width: 20px;
+        flex-shrink: 0;
+    }
+
+    .google-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .review-bar .stars {
+        font-size: .65rem;
+        letter-spacing: 0;
+        flex-shrink: 0;
+    }
+
+    .rating-text {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .rating-text strong {
+        font-size: .8rem;
+    }
+
+    .rating-text span {
+        display: none;
+    }
+
+    .review-bar button {
+        padding: 8px 14px;
+        font-size: .72rem;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+}
+
+
+/* =========================================================
+   GOOGLE REVIEW BAR — VERY SMALL MOBILE  (≤ 380px)
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .review-bar {
+        padding: 9px 10px;
+        gap: 6px;
+    }
+
+    .google-icon {
+        width: 18px;
+    }
+
+    .google-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .review-bar .stars {
+        font-size: .58rem;
+    }
+
+    .rating-text strong {
+        font-size: .74rem;
+    }
+
+    .review-bar button {
+        padding: 7px 11px;
+        font-size: .66rem;
+    }
+}
+
+
+/* =========================================================
+   CONTACT — 4 BUTTONS (.contcolor)  (≤ 860px)
+   All 4 stay in one row (not the auto-scrolling carousel some
+   earlier drafts used) — boxes and text shrink instead.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .contcolor {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding: 0 4%;
+    }
+
+    .contcolor button {
+        padding: 10px 6px;
+        min-width: 0;
+    }
+
+    .contcolor h5 {
+        font-size: .9rem;
+        margin-bottom: 4px;
+    }
+
+    .contcolor h3 {
+        font-size: .62rem;
+        margin-bottom: 3px;
+    }
+
+    .contcolor p {
+        font-size: .5rem;
+        margin-bottom: 6px;
+        overflow-wrap: break-word;
+    }
+
+    .contcolor a {
+        font-size: .5rem;
+    }
+}
+
+
+/* =========================================================
+   CONTACT — 4 BUTTONS, VERY SMALL MOBILE  (≤ 420px)
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .contcolor {
+        gap: 4px;
+    }
+
+    .contcolor button {
+        padding: 8px 4px;
+    }
+
+    .contcolor h5 {
+        font-size: .8rem;
+    }
+
+    .contcolor h3 {
+        font-size: .56rem;
+    }
+
+    .contcolor p {
+        font-size: .46rem;
+    }
+
+    .contcolor a {
+        font-size: .46rem;
+    }
+}
+
+
+/* =========================================================
+   CONTACT — MAP + FORM (.coat2)  (≤ 900px)
+   One container per row: map on top, contact form below.
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .coat2 {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .map iframe {
+        height: 300px;
+    }
+
+    .contform {
+        padding: 22px;
+    }
+}
+
+
+/* =========================================================
+   CONTACT — MAP + FORM, SMALL MOBILE  (≤ 480px)
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+    .map iframe {
+        height: 240px;
+    }
+
+    .contform {
+        padding: 18px;
+    }
+}
+
+
+/* =========================================================
+   FOOTER (.baccor3)  (≤ 980px)
+   4 columns → 2x2 grid.
+   ========================================================= */
+
+@media (max-width: 980px) {
+
+    .baccor3 {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        padding: 60px 6% 40px;
+    }
+}
+
+
+/* =========================================================
+   FOOTER (.baccor3)  (≤ 640px)
+   2x2 grid → single column, one block per row.
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+    .baccor3 {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 50px 8% 36px;
+    }
+
+    .cont3 h1 {
+        font-size: 1.05rem;
+    }
+
+    .cont3 h2 {
+        font-size: .92rem;
+    }
+
+    .cont3 p,
+    .cont3 li a {
+        font-size: .8rem;
+    }
+
+    .social-icons {
+        gap: 10px;
+    }
+
+    .social-icons a {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+
+/* =========================================================
+   FOOTER — VERY SMALL MOBILE  (≤ 420px)
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+    .baccor3 {
+        padding: 40px 6% 30px;
+        gap: 24px;
+    }
+}
+
+
+/* =========================================================
+   BOTTOM NAV BAR (PWA)  — mobile-only  (≤ 860px)
+   Base file already sets .pwa-bottom-nav{ display:none } by
+   default, so this is the piece that switches it on for phones
+   and pushes page content up so nothing sits behind it.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .pwa-bottom-nav {
+        display: flex;
+        flex-direction: column;
+    }
+
+    body {
+        padding-bottom: calc(var(--pwa-nav-h) + var(--safe-bottom));
+    }
+}
+
+
+/* =========================================================
+   BOTTOM NAV BAR (PWA) — hidden on desktop/tablet  (≥ 861px)
+   Explicit + !important so nothing else can accidentally
+   reveal it once the viewport is wide enough for the top navbar
+   alone to be the site's navigation.
+   ========================================================= */
+
+@media (min-width: 861px) {
+
+    .pwa-bottom-nav,
+    .pwa-install-banner {
+        display: none !important;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+}
+
+
+/* =========================================================
+   BUGFIX: TOP NAVBAR DISAPPEARING ON SCROLL  (≤ 860px)
+
+   Root cause: the Mobile Navigation block earlier in this file
+   sets `html, body { overflow-x: hidden; }` to stop horizontal
+   scroll. But once any ancestor has overflow set to anything
+   other than "visible" on ONE axis, browsers compute the other
+   axis as "auto" too — and `position: sticky` stops working on
+   any descendant (like .navbar) once that happens. That's why
+   the navbar held its place on the Home section but scrolled
+   away with the page everywhere else.
+
+   Fix: pin the navbar with position:fixed instead of sticky on
+   mobile (fixed isn't affected by the overflow issue), and add
+   matching top padding to <body> so the fixed bar doesn't cover
+   the first bit of content.
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .navbar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
+    body {
+        padding-top: 60px;
+    }
+}
+
+
+/* =========================================================
+   FLOATING WHATSAPP / INSTAGRAM BUTTONS — hidden on mobile
+   (≤ 860px). Redundant with the WhatsApp/Contact tabs already
+   in the bottom nav bar, and they were overlapping content
+   (e.g. the Download Image button, the Calculator input fields).
+   ========================================================= */
+
+@media (max-width: 860px) {
+
+    .whatsapp-float,
+    .instagram-float {
+        display: none;
+    }
+}
+
+
+/* =========================================================
+   CALCULATOR — CONTROLS ROW (GST toggle + Clear All + Calculate)
+   (≤ 900px)
+   Forced onto a single row like the large/desktop view — some
+   older styling was stacking the GST toggle and both buttons
+   onto separate lines. !important guards against that.
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    #calculator-section .controls-row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    #calculator-section .nigilswitch {
+        flex-shrink: 0;
+        gap: 4px;
+        font-size: 10px;
+    }
+
+    #calculator-section .nigilswitch b {
+        font-size: 8.5px;
+    }
+
+    #calculator-section .nigilslider {
+        width: 34px;
+        height: 19px;
+    }
+
+    #calculator-section .nigilslider::before {
+        width: 15px;
+        height: 15px;
+    }
+
+    #calculator-section .nigilswitch input:checked + .nigilslider::before {
+        transform: translateX(15px);
+    }
+
+    #calculator-section .controls-buttons {
+        display: flex !important;
+        flex-direction: row !important;
+        flex: 1 1 auto;
+        min-width: 0;
+        gap: 6px;
+        justify-content: flex-end;
+    }
+
+    #calculator-section .controls-buttons .btn {
+        width: auto !important;
+        flex: 0 1 auto;
+        min-width: 0;
+        padding: 8px 10px;
+        font-size: 10.5px;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    #calculator-section .controls-buttons .btn svg {
+        width: 13px;
+        height: 13px;
+    }
+}
+
+
+/* =========================================================
+   CALCULATOR — CONTROLS ROW, VERY SMALL MOBILE  (≤ 380px)
+   Drop the button icons to squeeze everything onto one line.
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    #calculator-section .controls-row {
+        gap: 6px;
+    }
+
+    #calculator-section .nigilswitch {
+        font-size: 9px;
+    }
+
+    #calculator-section .controls-buttons .btn {
+        padding: 7px 8px;
+        font-size: 9.5px;
+    }
+
+    #calculator-section .controls-buttons .btn svg {
+        display: none;
+    }
+}
