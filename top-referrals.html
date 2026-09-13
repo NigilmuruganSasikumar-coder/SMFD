@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Top Pages &amp; Referrals · Selvamurugan Fast Drills Admin</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin">
+
+  <div class="admin-layout">
+    <div id="sidebarMount"></div>
+
+    <div class="admin-main">
+      <div id="topbarMount"></div>
+
+      <main class="admin-content">
+        <div id="pageError" class="error-banner" hidden></div>
+
+        <div class="page-head">
+          <div>
+            <h1>Top Pages &amp; Referrals</h1>
+            <p>Find out what pages get the most traffic and where your visitors come from</p>
+          </div>
+          <div class="page-head-actions">
+            <select id="rangeSelect" class="select-control">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+            <button id="reportBtn" class="btn btn-accent"><i class="fas fa-download"></i> Download Report</button>
+          </div>
+        </div>
+
+        <section id="traffic-sources" class="panel">
+          <div class="panel-title" style="margin-bottom:14px;">Traffic Sources</div>
+          <div class="donut-wrap">
+            <div style="position:relative;">
+              <div id="sourceDonut"></div>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <div class="donut-center-value" id="sourceDonutTotal">—</div>
+                <div class="donut-center-label">Total Visits</div>
+              </div>
+            </div>
+            <div class="donut-legend" id="sourceLegend"></div>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <div id="top-pages" class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Top Pages</div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
+                <thead><tr><th>#</th><th>Page</th><th>Page Views</th><th>%</th></tr></thead>
+                <tbody id="topPagesBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="referrals" class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Top Referrals</div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
+                <thead><tr><th>#</th><th>Source</th><th>Visitors</th><th>%</th></tr></thead>
+                <tbody id="referralsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Social Media Traffic</div>
+            <div id="socialBars"></div>
+          </div>
+          <div class="panel" style="display:flex;flex-direction:column;justify-content:center;gap:12px;background:linear-gradient(120deg, rgba(245,196,0,.10), rgba(245,196,0,.02));">
+            <div class="panel-title">More Visitors. More Inquiries.</div>
+            <p class="stat-note" style="font-size:.82rem;">Track your website performance and make better decisions with a full data export.</p>
+            <button id="reportBtn2" class="btn btn-accent" style="width:fit-content;"><i class="fas fa-download"></i> Download Report</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/top-referrals.js"></script>
+</body>
+</html>

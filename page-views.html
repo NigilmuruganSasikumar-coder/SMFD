@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Page Views · Selvamurugan Fast Drills Admin</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin">
+
+  <div class="admin-layout">
+    <div id="sidebarMount"></div>
+
+    <div class="admin-main">
+      <div id="topbarMount"></div>
+
+      <main class="admin-content">
+        <div id="pageError" class="error-banner" hidden></div>
+
+        <div class="page-head">
+          <div>
+            <h1>Page Views</h1>
+            <p>Detailed page view statistics</p>
+          </div>
+          <div class="page-head-actions">
+            <select id="rangeSelect" class="select-control">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+            <button id="exportBtn" class="btn btn-accent"><i class="fas fa-download"></i> Export CSV</button>
+          </div>
+        </div>
+
+        <section class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--blue"><i class="fas fa-eye"></i></div>
+            <div class="stat-label">Total Page Views</div>
+            <div class="stat-value" id="statTotalViews">—</div>
+            <div id="statTotalViewsDelta"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--blue"><i class="fas fa-fingerprint"></i></div>
+            <div class="stat-label">Unique Page Views</div>
+            <div class="stat-value" id="statUniqueViews">—</div>
+            <div class="stat-note">distinct sessions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--purple"><i class="fas fa-hourglass-half"></i></div>
+            <div class="stat-label">Avg. Time on Page</div>
+            <div class="stat-value" id="statAvgTime">—</div>
+            <div class="stat-note">estimate from view gaps</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--red"><i class="fas fa-door-open"></i></div>
+            <div class="stat-label">Bounce Rate</div>
+            <div class="stat-value" id="statBounce">—</div>
+            <div class="stat-note">single-view sessions</div>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Top Pages by Page Views</div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
+                <thead>
+                  <tr><th>#</th><th>Page URL</th><th>Page Views</th><th>% of Total</th></tr>
+                </thead>
+                <tbody id="topPagesBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Page Views Trend</div>
+            <div id="trendChart"></div>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Top Pages (Graph)</div>
+            <div class="panel-legend" style="margin-bottom:10px;">
+              <span><i class="legend-dot" style="background:#3b82f6"></i>Page Views</span>
+              <span><i class="legend-dot" style="background:#f5c400"></i>Unique Views</span>
+            </div>
+            <div id="dualChart"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Views by Section</div>
+            <div id="sectionBars"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/page-views.js"></script>
+</body>
+</html>

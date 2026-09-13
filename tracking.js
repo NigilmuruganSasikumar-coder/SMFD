@@ -4,11 +4,13 @@
 // Loaded as: <script type="module" src="tracking.js"></script>
 // — the LAST line before </body>, after the existing classic <script>
 // tags (script1.js, script.js, ui.js, pwa.js). Module scripts defer
-// automatically, so this ordering is safe and intentional (§6.1).
+// automatically, so this ordering is safe and intentional.
 //
-// Wires itself to markup that already exists on the site — see §6.2/6.3
-// for the real selectors/IDs this expects. If a selector isn't found,
-// this script simply skips that hook rather than throwing.
+// v2 additions (for the 6-page admin analytics rebuild): traffic-source
+// classification, a human-readable referrer label, a persistent (not
+// per-session) new-vs-returning visitor flag, and tablet detection.
+// Nothing about the existing session/pageview/interaction shape changed —
+// these are additive fields, so older dashboard code keeps working.
 // -----------------------------------------------------------------------
 
 import { db, ensureAnonAuth } from "./js/firebase-init.js";
@@ -34,9 +36,25 @@ function getSessionId() {
   return id;
 }
 
+/**
+ * Persistent (localStorage, not sessionStorage) — survives across browser
+ * sessions, so it's what lets us tell "new" visitors from "returning"
+ * ones. A visitor is "returning" if this key already existed *before*
+ * the current session started.
+ */
+function resolveVisitorStatus() {
+  const existing = localStorage.getItem("smfd_visitor_first_seen");
+  if (existing) return { isReturning: true, firstSeen: existing };
+  const now = new Date().toISOString();
+  localStorage.setItem("smfd_visitor_first_seen", now);
+  return { isReturning: false, firstSeen: now };
+}
+
 function parseDevice() {
   const ua = navigator.userAgent || "";
-  const formFactor = /Mobi|Android/i.test(ua) ? "Mobile" : "Desktop";
+  const isTablet = /iPad/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua));
+  const isMobile = !isTablet && /Mobi|Android/i.test(ua);
+  const formFactor = isTablet ? "Tablet" : isMobile ? "Mobile" : "Desktop";
 
   let os = "Other";
   if (/Android/i.test(ua)) os = "Android";
@@ -48,10 +66,44 @@ function parseDevice() {
   let browser = "Other";
   if (/Edg\//i.test(ua)) browser = "Edge";
   else if (/Chrome\//i.test(ua) && !/Edg\//i.test(ua)) browser = "Chrome";
-  else if (/Safari\//i.test(ua) && !/Chrome\//i.test(ua)) browser = "Safari";
   else if (/Firefox\//i.test(ua)) browser = "Firefox";
+  else if (/Safari\//i.test(ua) && !/Chrome\//i.test(ua)) browser = "Safari";
 
   return { formFactor, os, browser };
+}
+
+/**
+ * Classifies document.referrer into a broad "source" bucket (matches the
+ * Dashboard Overview's Traffic Sources donut) and a specific human label
+ * (matches the Top Referrals table — "Google", "WhatsApp", "Direct", etc).
+ * Same-origin referrers (internal navigation) are treated as Direct.
+ */
+function classifyReferrer() {
+  const ref = document.referrer || "";
+  if (!ref) return { source: "Direct", referrerLabel: "Direct" };
+
+  let host = "";
+  try { host = new URL(ref).hostname.replace(/^www\./, ""); } catch { return { source: "Direct", referrerLabel: "Direct" }; }
+
+  if (host === location.hostname) return { source: "Direct", referrerLabel: "Direct" };
+
+  const table = [
+    [/google\./, "Organic Search", "Google"],
+    [/bing\./, "Organic Search", "Bing"],
+    [/yahoo\./, "Organic Search", "Yahoo"],
+    [/duckduckgo\./, "Organic Search", "DuckDuckGo"],
+    [/youtube\./, "Social Media", "YouTube"],
+    [/instagram\./, "Social Media", "Instagram"],
+    [/facebook\.|fb\.com/, "Social Media", "Facebook"],
+    [/twitter\.|^t\.co$|x\.com/, "Social Media", "Twitter / X"],
+    [/linkedin\./, "Social Media", "LinkedIn"],
+    [/wa\.me|whatsapp\./, "Referral", "WhatsApp"]
+  ];
+
+  for (const [pattern, source, label] of table) {
+    if (pattern.test(host)) return { source, referrerLabel: label };
+  }
+  return { source: "Referral", referrerLabel: host };
 }
 
 async function fetchGeo() {
@@ -87,17 +139,23 @@ async function init() {
     const isNewSession = !sessionStorage.getItem("smfd_session_initialized");
 
     if (isNewSession) {
-      const [device, geo] = [parseDevice(), await fetchGeo()];
+      const device = parseDevice();
+      const geo = await fetchGeo();
+      const { source, referrerLabel } = classifyReferrer();
+      const { isReturning } = resolveVisitorStatus();
+
       await setDoc(sessionRef, {
         startedAt: serverTimestamp(),
         lastSeen: serverTimestamp(),
         active: true,
         device,
         geo,
+        source,
+        referrerLabel,
+        newVisitor: !isReturning,
         activeSection: null
       });
       await updateDoc(summaryRef, { totalSessions: increment(1) }).catch(async () => {
-        // stats/summary doesn't exist yet — create it.
         await setDoc(summaryRef, { totalSessions: 1 }, { merge: true });
       });
       sessionStorage.setItem("smfd_session_initialized", "true");
@@ -201,8 +259,8 @@ function wireSectionTracking() {
 
 /**
  * Called by ui.js's calculateAndDisplay() via a trackQuoteComputed()
- * helper that no-ops if this script hasn't loaded yet. See §6.4 — do not
- * rename this without updating that call site.
+ * helper that no-ops if this script hasn't loaded yet. Do not rename
+ * this without updating that call site.
  */
 window.smfdTrackQuote = function smfdTrackQuote(depth, total) {
   whenReady(async () => {

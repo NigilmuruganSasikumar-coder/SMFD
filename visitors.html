@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Visitors · Selvamurugan Fast Drills Admin</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin">
+
+  <div class="admin-layout">
+    <div id="sidebarMount"></div>
+
+    <div class="admin-main">
+      <div id="topbarMount"></div>
+
+      <main class="admin-content">
+        <div id="pageError" class="error-banner" hidden></div>
+
+        <div class="page-head">
+          <div>
+            <h1>Website Visitors</h1>
+            <p>Audience insights and demographics</p>
+          </div>
+          <div class="page-head-actions">
+            <select id="rangeSelect" class="select-control">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </div>
+        </div>
+
+        <section class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--blue"><i class="fas fa-users"></i></div>
+            <div class="stat-label">Total Visitors</div>
+            <div class="stat-value" id="statTotalVisitors">—</div>
+            <div id="statTotalVisitorsDelta"></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--green"><i class="fas fa-user-plus"></i></div>
+            <div class="stat-label">New Visitors</div>
+            <div class="stat-value" id="statNewVisitors">—</div>
+            <div class="stat-note" id="statNewPct">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--amber"><i class="fas fa-user-clock"></i></div>
+            <div class="stat-label">Returning Visitors</div>
+            <div class="stat-value" id="statReturningVisitors">—</div>
+            <div class="stat-note" id="statReturningPct">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon--purple"><i class="fas fa-clock"></i></div>
+            <div class="stat-label">Avg. Session Duration</div>
+            <div class="stat-value" id="statAvgSession">—</div>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Visitor Trend</div>
+              <div class="panel-legend">
+                <span><i class="legend-dot" style="background:#3b82f6"></i>New Visitors</span>
+                <span><i class="legend-dot" style="background:#f5c400"></i>Returning Visitors</span>
+              </div>
+            </div>
+            <div id="visitorTrendChart"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">New vs Returning</div>
+            <div class="donut-wrap">
+              <div style="position:relative;">
+                <div id="nrDonut"></div>
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                  <div class="donut-center-value" id="nrDonutTotal">—</div>
+                  <div class="donut-center-label">Total Visitors</div>
+                </div>
+              </div>
+              <div class="donut-legend" id="nrLegend"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid-2">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Visitors by State</div>
+            <div id="stateBars"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Visitors by Device</div>
+            <div id="deviceBars"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/visitors.js"></script>
+</body>
+</html>

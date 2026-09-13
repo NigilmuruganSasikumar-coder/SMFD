@@ -1,123 +1,119 @@
-// js/dashboard.js
-// -----------------------------------------------------------------------
-// Overview page logic for dashboard.html (§10). Fetches once, renders
-// everything, then re-fetches on an interval. The fetched data is handed
-// to analytics-modal.js so opening the modal costs zero extra reads (§11).
-// -----------------------------------------------------------------------
-
+// js/dashboard.js — Dashboard Overview (page 1 of 6)
 import { requireLoginOrRedirect, logout } from "./auth.js";
-
-// Hard stop BEFORE any Firestore call or DOM paint of real data — setting
-// location.href alone does not halt script execution, so this must throw.
 requireLoginOrRedirect();
 
 import { ensureAnonAuth } from "./firebase-init.js";
 import {
   fetchDashboardData,
   getActiveSessions,
-  computeTrafficTrend,
   computeDeviceSplit,
   computeFunnel,
   computePrimaryDevice,
+  computePageViewsAndVisitorsTrend,
+  computeTrafficSources,
+  computeAvgSessionDuration,
+  computePeriodComparison,
   formatLakhs
 } from "./data.js";
-import { initAnalyticsModal, refreshAnalyticsModal } from "./analytics-modal.js";
+import {
+  renderShell,
+  setSyncStatus,
+  getRefreshIntervalMs,
+  buildLineChartSVG,
+  buildDonutSVG,
+  formatNumber,
+  formatDuration,
+  deltaChipHTML
+} from "./admin-shell.js";
 
-const REFRESH_INTERVAL_MS = 30000;
+renderShell({ activeId: "dashboard", onLogout: logout });
 
-let latestData = null;
+const SOURCE_COLORS = {
+  "Organic Search": "#3b82f6",
+  "Direct": "#f5c400",
+  "Social Media": "#22d3ee",
+  "Referral": "#a855f7",
+  "Others": "#5c6a90"
+};
 
-function $(id) {
-  return document.getElementById(id);
+function $(id) { return document.getElementById(id); }
+
+function renderStatCards(data, activeSessions, rangeDays) {
+  const totalViews = data.summary.allTimeViews ?? data.pageviews.length;
+  const totalVisitors = data.summary.totalSessions ?? data.sessions.length;
+
+  $("statPageViews").textContent = formatNumber(totalViews);
+  $("statVisitors").textContent = formatNumber(totalVisitors);
+  $("statOnlineNow").textContent = formatNumber(activeSessions.length);
+  $("statAvgSession").textContent = formatDuration(computeAvgSessionDuration(data.sessions));
+
+  const pvCompare = computePeriodComparison(data.pageviews, "timestamp", rangeDays);
+  const visitorCompare = computePeriodComparison(data.sessions, "startedAt", rangeDays);
+  $("statPageViewsDelta").innerHTML = deltaChipHTML(pvCompare.pct);
+  $("statVisitorsDelta").innerHTML = deltaChipHTML(visitorCompare.pct);
 }
 
-function renderStatCards(summary, activeSessions) {
-  $("statTotalSessions").textContent = (summary.totalSessions ?? 0).toLocaleString("en-IN");
-  $("statActiveSessions").textContent = activeSessions.length.toLocaleString("en-IN");
-  $("statTotalQuotes").textContent = (summary.totalQuotesComputed ?? 0).toLocaleString("en-IN");
-  $("statPipelineValue").textContent = formatLakhs(summary.pipelineValue ?? 0);
-  $("statAllTimeViews").textContent = (summary.allTimeViews ?? 0).toLocaleString("en-IN");
+function renderPVVChart(pageviews, days) {
+  const trend = computePageViewsAndVisitorsTrend(pageviews, days);
+  const xLabels = trend.map((t) => t.date.slice(5));
+  const svg = buildLineChartSVG(
+    [
+      { label: "Page Views", color: "#3b82f6", values: trend.map((t) => t.views) },
+      { label: "Visitors", color: "#f5c400", values: trend.map((t) => t.visitors) }
+    ],
+    xLabels,
+    { uid: "pvv", height: 240 }
+  );
+  $("pvvChart").innerHTML = svg;
 }
 
-function renderTrafficChart(pageviews) {
-  const trend = computeTrafficTrend(pageviews, 7);
-  const svg = $("trafficChartSvg");
-  const width = 640;
-  const height = 200;
-  const padding = 28;
-  const max = Math.max(1, ...trend.map((t) => t.count));
-  const stepX = (width - padding * 2) / (trend.length - 1 || 1);
-
-  const points = trend.map((t, i) => {
-    const x = padding + i * stepX;
-    const y = height - padding - (t.count / max) * (height - padding * 2);
-    return { x, y, ...t };
-  });
-
-  const linePath = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-  const areaPath = `${linePath} L${points[points.length - 1].x.toFixed(1)},${height - padding} L${points[0].x.toFixed(1)},${height - padding} Z`;
-
-  const dots = points
+function renderSourceDonut(sessions) {
+  const sources = computeTrafficSources(sessions);
+  const total = sessions.length || 1;
+  const segments = sources.map((s) => ({ label: s.key, value: s.count, color: SOURCE_COLORS[s.key] || "#5c6a90" }));
+  $("sourceDonut").innerHTML = buildDonutSVG(segments, { size: 160, stroke: 24 });
+  $("sourceDonutTotal").textContent = formatNumber(total);
+  $("sourceLegend").innerHTML = sources
     .map(
-      (p) =>
-        `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" class="chart-dot"><title>${p.date}: ${p.count}</title></circle>`
+      (s) => `
+      <div class="donut-legend-row">
+        <span class="name"><i class="legend-dot" style="background:${SOURCE_COLORS[s.key] || "#5c6a90"}"></i>${s.key}</span>
+        <span class="val">${s.pct}%</span>
+      </div>`
     )
-    .join("");
+    .join("") || `<div class="empty-state">No traffic yet.</div>`;
+}
 
-  const labels = points
-    .map(
-      (p) =>
-        `<text x="${p.x.toFixed(1)}" y="${height - 6}" class="chart-label" text-anchor="middle">${p.date.slice(5)}</text>`
-    )
+function renderFunnel(summary, pageviews, interactions, quotes) {
+  const steps = computeFunnel(summary, pageviews, interactions, quotes);
+  const max = Math.max(1, ...steps.map((s) => s.value));
+  $("funnelContainer").innerHTML = steps
+    .map((s) => {
+      const pct = Math.round((s.value / max) * 100);
+      return `
+        <div class="bar-row">
+          <div class="bar-name">${s.label}</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <div class="bar-count">${formatNumber(s.value)}</div>
+        </div>`;
+    })
     .join("");
-
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  svg.innerHTML = `
-    <path d="${areaPath}" class="chart-area"></path>
-    <path d="${linePath}" class="chart-line"></path>
-    ${dots}
-    ${labels}
-  `;
 }
 
 function renderDeviceSplit(sessions) {
   const split = computeDeviceSplit(sessions);
-  const total = split.mobile + split.desktop + split.other || 1;
+  const total = split.mobile + split.desktop + split.tablet + split.other || 1;
   const mobilePct = Math.round((split.mobile / total) * 100);
   const desktopPct = Math.round((split.desktop / total) * 100);
-
   $("deviceSplitMobileBar").style.width = `${mobilePct}%`;
   $("deviceSplitDesktopBar").style.width = `${desktopPct}%`;
   $("deviceSplitMobileLabel").textContent = `Mobile — ${mobilePct}% (${split.mobile})`;
   $("deviceSplitDesktopLabel").textContent = `Desktop — ${desktopPct}% (${split.desktop})`;
 }
 
-function renderFunnel(summary, pageviews, interactions, quotes) {
-  const steps = computeFunnel(summary, pageviews, interactions, quotes);
-  const max = Math.max(1, ...steps.map((s) => s.value));
-  const container = $("funnelContainer");
-  container.innerHTML = steps
-    .map((s) => {
-      const pct = Math.round((s.value / max) * 100);
-      return `
-        <div class="funnel-row">
-          <div class="funnel-row-label">
-            <span>${s.label}</span>
-            <span>${s.value.toLocaleString("en-IN")}</span>
-          </div>
-          <div class="funnel-track">
-            <div class="funnel-fill" style="width:${pct}%"></div>
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-}
-
 function renderLiveIntelligence(activeSessions) {
-  $("liveActiveCount").textContent = activeSessions.length.toLocaleString("en-IN");
+  $("liveActiveCount").textContent = formatNumber(activeSessions.length);
   $("livePrimaryDevice").textContent = computePrimaryDevice(activeSessions) || "—";
-
   const sectionCounts = new Map();
   activeSessions.forEach((s) => {
     const section = s.activeSection || "Unknown";
@@ -127,53 +123,41 @@ function renderLiveIntelligence(activeSessions) {
   $("liveActiveSection").textContent = topSection ? topSection[0] : "—";
 }
 
-function setLastSynced(latencyMs) {
-  $("syncLatency").textContent = `${Math.round(latencyMs)}ms`;
-  $("syncTimestamp").textContent = new Date().toLocaleTimeString("en-IN", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true
-  });
+function renderBusinessMetrics(summary) {
+  $("statTotalQuotes").textContent = formatNumber(summary.totalQuotesComputed ?? 0);
+  $("statPipelineValue").textContent = formatLakhs(summary.pipelineValue ?? 0);
+  $("statAllTimeViews").textContent = formatNumber(summary.allTimeViews ?? 0);
+  $("statTotalSessions").textContent = formatNumber(summary.totalSessions ?? 0);
 }
 
-async function loadAndRender({ isFirstLoad = false } = {}) {
+async function loadAndRender() {
+  const rangeDays = Number($("rangeSelect").value) || 30;
   const t0 = performance.now();
   const data = await fetchDashboardData();
-  const latencyMs = performance.now() - t0;
-  latestData = data;
+  setSyncStatus(performance.now() - t0);
 
   const activeSessions = getActiveSessions(data.sessions);
-
-  renderStatCards(data.summary, activeSessions);
-  renderTrafficChart(data.pageviews);
-  renderDeviceSplit(data.sessions);
+  renderStatCards(data, activeSessions, rangeDays);
+  renderPVVChart(data.pageviews, rangeDays);
+  renderSourceDonut(data.sessions);
   renderFunnel(data.summary, data.pageviews, data.interactions, data.quotes);
+  renderDeviceSplit(data.sessions);
   renderLiveIntelligence(activeSessions);
-  setLastSynced(latencyMs);
-
-  if (isFirstLoad) {
-    initAnalyticsModal(() => latestData);
-  } else {
-    refreshAnalyticsModal();
-  }
+  renderBusinessMetrics(data.summary);
 }
 
 async function init() {
   try {
     await ensureAnonAuth();
-    await loadAndRender({ isFirstLoad: true });
-    setInterval(() => loadAndRender().catch(console.error), REFRESH_INTERVAL_MS);
+    await loadAndRender();
+    setInterval(() => loadAndRender().catch(console.error), getRefreshIntervalMs());
   } catch (err) {
     console.error("Dashboard load failed:", err);
-    $("dashboardError").hidden = false;
-    $("dashboardError").textContent =
-      "Couldn't load live data. Check your connection and Firestore rules, then refresh.";
+    $("pageError").hidden = false;
+    $("pageError").textContent = "Couldn't load live data. Check your connection and Firestore rules, then refresh.";
   }
 }
 
-$("logoutBtn").addEventListener("click", logout);
-$("openAnalyticsModalBtn").addEventListener("click", () => {
-  document.dispatchEvent(new CustomEvent("smfd:open-analytics-modal"));
-});
+$("rangeSelect").addEventListener("change", () => loadAndRender().catch(console.error));
 
 init();

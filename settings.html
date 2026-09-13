@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings · Selvamurugan Fast Drills Admin</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin">
+
+  <div class="admin-layout">
+    <div id="sidebarMount"></div>
+
+    <div class="admin-main">
+      <div id="topbarMount"></div>
+
+      <main class="admin-content">
+        <div class="page-head">
+          <div>
+            <h1>Settings</h1>
+            <p>Dashboard preferences and account info</p>
+          </div>
+        </div>
+
+        <section class="grid-2-even">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Account</div>
+            <div class="bar-row" style="align-items:flex-start;">
+              <div class="bar-name" style="width:120px;">Admin email</div>
+              <div style="flex:1;color:var(--ink);font-weight:600;" id="accountEmail">—</div>
+            </div>
+            <div class="bar-row" style="align-items:flex-start;">
+              <div class="bar-name" style="width:120px;">Firebase project</div>
+              <div style="flex:1;color:var(--ink);font-weight:600;" id="accountProject">—</div>
+            </div>
+            <button id="logoutBtn2" class="btn" style="margin-top:8px;"><i class="fas fa-right-from-bracket"></i> Log out</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Auto-refresh</div>
+            <p class="stat-note" style="margin-bottom:12px;">How often every dashboard page re-fetches live data (the Real-time page always polls faster, every 10s, regardless of this setting).</p>
+            <select id="refreshSelect" class="select-control" style="width:100%;">
+              <option value="10000">Every 10 seconds</option>
+              <option value="15000">Every 15 seconds</option>
+              <option value="30000">Every 30 seconds</option>
+              <option value="60000">Every 60 seconds</option>
+              <option value="120000">Every 2 minutes</option>
+            </select>
+            <div id="savedNote" class="stat-note" style="margin-top:10px;color:var(--green);" hidden>Saved.</div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/settings.js"></script>
+</body>
+</html>

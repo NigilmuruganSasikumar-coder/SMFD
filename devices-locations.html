@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Devices &amp; Locations · Selvamurugan Fast Drills Admin</title>
+<link rel="icon" href="img/favicon.ico" />
+<link rel="stylesheet" href="css/admin.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin">
+
+  <div class="admin-layout">
+    <div id="sidebarMount"></div>
+
+    <div class="admin-main">
+      <div id="topbarMount"></div>
+
+      <main class="admin-content">
+        <div id="pageError" class="error-banner" hidden></div>
+
+        <div class="page-head">
+          <div>
+            <h1>Devices &amp; Locations</h1>
+            <p>Where your visitors come from and what devices they use</p>
+          </div>
+          <div class="page-head-actions">
+            <select id="rangeSelect" class="select-control">
+              <option value="7">Last 7 days</option>
+              <option value="30" selected>Last 30 days</option>
+              <option value="90">Last 90 days</option>
+            </select>
+          </div>
+        </div>
+
+        <section id="devices" class="grid-3">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Devices Used</div>
+            <div class="donut-wrap">
+              <div style="position:relative;">
+                <div id="deviceDonut"></div>
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                  <div class="donut-center-value" id="deviceDonutTotal">—</div>
+                  <div class="donut-center-label">Total Visitors</div>
+                </div>
+              </div>
+              <div class="donut-legend" id="deviceLegend"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Browser</div>
+            <div id="browserBars"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Operating System</div>
+            <div id="osBars"></div>
+          </div>
+        </section>
+
+        <section id="locations" class="grid-2">
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Top Locations</div>
+            <div style="overflow-x:auto;">
+              <table class="data-table">
+                <thead><tr><th>#</th><th>Country</th><th>Visitors</th><th>%</th></tr></thead>
+                <tbody id="locationsBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title" style="margin-bottom:14px;">Visitor Location Map</div>
+            <div class="live-map" id="locationMap"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="js/devices-locations.js"></script>
+</body>
+</html>
